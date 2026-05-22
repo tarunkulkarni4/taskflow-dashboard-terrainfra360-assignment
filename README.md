@@ -7,8 +7,9 @@ A clean, responsive, full-stack personal task management application built with 
 
 ---
 
-## 🚀 Live Demo
+## 🚀 Links & Demo
 
+- **GitHub Repository:** [taskflow-dashboard-terrainfra360-assignment](https://github.com/tarunkulkarni4/taskflow-dashboard-terrainfra360-assignment)
 - **Deployed URL:** `https://YOUR-APP.vercel.app` *(replace after Vercel deployment)*
 - **Demo Account:**
   - **Email:** `demo@taskflow.com`
@@ -80,14 +81,14 @@ graph TD
     Pages -->|CRUD Operations| FBStore
     Pages -->|onSnapshot listeners| FBStore
     
-    subgraph Frontend "Next.js App Router (Client-side rendered parts)"
+    subgraph Frontend ["Next.js App Router"]
     Client
     AuthCtx
     Layout
     Pages
     end
     
-    subgraph Backend "Firebase (BaaS)"
+    subgraph Backend ["Firebase BaaS"]
     FBAuth
     FBStore
     end
