@@ -299,7 +299,7 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
                   required
-                  className="h-11 pl-9 pr-10 text-sm rounded-xl border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 focus-visible:ring-1 focus-visible:ring-indigo-400 focus-visible:border-indigo-400"
+                  className="h-11 pl-9 pr-10 text-sm rounded-xl border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 focus-visible:ring-1 focus-visible:ring-indigo-400 focus-visible:border-indigo-400 [&::-ms-reveal]:hidden [&::-ms-clear]:hidden"
                 />
                 <button
                   type="button"
