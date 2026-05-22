@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { Bell, Search, Menu, Sun, Moon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -14,6 +16,14 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const { user } = useAuth();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/tasks?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -30,14 +40,16 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
         <button onClick={onMenuClick} className="md:hidden p-2 rounded-md hover:bg-muted text-muted-foreground transition-colors">
           <Menu className="h-5 w-5" />
         </button>
-        <div className="relative hidden w-96 md:flex">
+        <form onSubmit={handleSearch} className="relative hidden w-96 md:flex">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             type="search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search tasks, projects..."
             className="w-full rounded-full bg-muted pl-9 md:w-[300px] lg:w-[400px]"
           />
-        </div>
+        </form>
       </div>
       <div className="flex items-center gap-4">
         <button

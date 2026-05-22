@@ -20,16 +20,16 @@ interface Task {
   project: string;
   dueDate: string;
   priority: "Low" | "Medium" | "High";
-  completed: boolean;
+  status: "Todo" | "In Progress" | "Done";
 }
 
 const INITIAL_TASKS: Task[] = [
-  { id: "1", title: "Update landing page design", project: "Marketing Website", dueDate: "2026-05-22", priority: "High", completed: false },
-  { id: "2", title: "Fix authentication flow bug", project: "Core App", dueDate: "2026-05-23", priority: "High", completed: false },
-  { id: "3", title: "Write API documentation", project: "Backend", dueDate: "2026-05-25", priority: "Medium", completed: false },
-  { id: "4", title: "Prepare Q3 presentation", project: "Management", dueDate: "2026-05-21", priority: "High", completed: true },
-  { id: "5", title: "Setup PostgreSQL database migration", project: "Backend", dueDate: "2026-05-28", priority: "High", completed: false },
-  { id: "6", title: "Conduct user feedback sessions", project: "UX Research", dueDate: "2026-05-30", priority: "Low", completed: false },
+  { id: "1", title: "Update landing page design", project: "Marketing Website", dueDate: "2026-05-22", priority: "High", status: "Todo" },
+  { id: "2", title: "Fix authentication flow bug", project: "Core App", dueDate: "2026-05-23", priority: "High", status: "In Progress" },
+  { id: "3", title: "Write API documentation", project: "Backend", dueDate: "2026-05-25", priority: "Medium", status: "Todo" },
+  { id: "4", title: "Prepare Q3 presentation", project: "Management", dueDate: "2026-05-21", priority: "High", status: "Done" },
+  { id: "5", title: "Setup PostgreSQL database migration", project: "Backend", dueDate: "2026-05-28", priority: "High", status: "Todo" },
+  { id: "6", title: "Conduct user feedback sessions", project: "UX Research", dueDate: "2026-05-30", priority: "Low", status: "Todo" },
 ];
 
 export default function TasksPage() {
@@ -40,6 +40,14 @@ export default function TasksPage() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"All" | "Active" | "Completed">("All");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("q");
+    if (q) {
+      setSearch(q);
+    }
+  }, []);
 
   // New task form state
   const [newTitle, setNewTitle] = useState("");
@@ -77,13 +85,13 @@ export default function TasksPage() {
   }, [user]);
 
   const toggleTask = async (task: Task) => {
-    // Optimistic UI update
-    setTasks(tasks.map(t => t.id === task.id ? { ...t, completed: !t.completed, status: !t.completed ? "Done" : "Todo" } : t));
+    // Cycle through status
+    const cycle: Record<string, "Todo" | "In Progress" | "Done"> = { "Todo": "In Progress", "In Progress": "Done", "Done": "Todo" };
+    const newStatus = cycle[task.status] ?? "Todo";
+
+    setTasks(tasks.map(t => t.id === task.id ? { ...t, status: newStatus } : t));
     try {
-      await updateDoc(doc(db, "tasks", task.id), { 
-        completed: !task.completed,
-        status: !task.completed ? "Done" : "Todo"
-      });
+      await updateDoc(doc(db, "tasks", task.id), { status: newStatus });
     } catch (err) {
       console.error(err);
     }
@@ -123,7 +131,6 @@ export default function TasksPage() {
         project,
         dueDate,
         priority,
-        completed: false,
         status: "Todo",
         userId: user.uid,
         createdAt: serverTimestamp(),
@@ -137,10 +144,10 @@ export default function TasksPage() {
 
   const filteredTasks = tasks.filter(task => {
     const matchesSearch = task.title.toLowerCase().includes(search.toLowerCase()) || 
-                          task.project.toLowerCase().includes(search.toLowerCase());
+                          (task.project || "").toLowerCase().includes(search.toLowerCase());
     const matchesFilter = filter === "All" ||
-                          (filter === "Active" && !task.completed) ||
-                          (filter === "Completed" && task.completed);
+                          (filter === "Active" && task.status !== "Done") ||
+                          (filter === "Completed" && task.status === "Done");
     return matchesSearch && matchesFilter;
   });
 
@@ -299,12 +306,12 @@ export default function TasksPage() {
                   exit={{ opacity: 0, height: 0 }}
                   className={cn(
                     "flex items-center justify-between p-4 transition-colors hover:bg-muted/30",
-                    task.completed && "bg-muted/10 opacity-70"
+                    task.status === "Done" && "bg-muted/10 opacity-70"
                   )}
                 >
                   <div className="flex items-center gap-3 flex-1 min-w-0 pr-4">
                     <button onClick={() => toggleTask(task)} className="text-muted-foreground hover:text-primary transition-all">
-                      {task.completed ? (
+                      {task.status === "Done" ? (
                         <CheckCircle2 className="h-5 w-5 text-emerald-500 fill-emerald-100 dark:fill-emerald-950/20" />
                       ) : (
                         <Circle className="h-5 w-5" />
@@ -312,7 +319,7 @@ export default function TasksPage() {
                     </button>
                     <span className={cn(
                       "font-medium text-sm truncate",
-                      task.completed && "line-through text-muted-foreground"
+                      task.status === "Done" && "line-through text-muted-foreground"
                     )}>
                       {task.title}
                     </span>
