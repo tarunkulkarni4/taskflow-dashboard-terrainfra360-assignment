@@ -34,8 +34,8 @@ export function Sidebar({ className, onNavClick }: { className?: string, onNavCl
   return (
     <div className={cn("flex h-full w-64 flex-col border-r bg-card px-3 py-4 text-card-foreground shadow-sm", className)}>
       <div className="mb-8 flex items-center px-3">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">
-          TM
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 shadow">
+          <CheckSquare className="h-4 w-4" />
         </div>
         <span className="ml-3 text-lg font-semibold tracking-tight">TaskFlow</span>
       </div>

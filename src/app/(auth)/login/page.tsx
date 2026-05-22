@@ -205,7 +205,7 @@ export default function LoginPage() {
       {/* ══ FOREGROUND: solid white auth panel ══ */}
       <div className="relative z-20 flex flex-col justify-center items-center bg-white overflow-hidden lg:border-l lg:border-zinc-100 w-full h-full lg:w-[38%] lg:min-w-[340px]">
         {/* Subtle DotField background for light panel */}
-        <div className="absolute inset-0 z-0 opacity-60">
+        <div className="absolute inset-0 z-0 opacity-60 pointer-events-none">
           <DotField
             dotRadius={1.5}
             dotSpacing={16}
@@ -226,19 +226,19 @@ export default function LoginPage() {
           <div className="w-full max-w-[340px]">
 
             {/* Logo */}
-            <div className="flex items-center gap-2 mb-6">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-950 text-white shadow">
-                <CheckSquare className="h-4 w-4" />
+            <div className="flex flex-col items-center gap-3 mb-8">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-950 text-white shadow-lg">
+                <CheckSquare className="h-6 w-6" />
               </div>
-              <span className="text-sm font-bold text-zinc-900 tracking-tight">TaskFlow</span>
+              <span className="text-2xl font-extrabold text-zinc-900 tracking-tight">TaskFlow</span>
             </div>
 
             {/* Title */}
             <div className="mb-6">
-              <h1 className="text-[24px] font-bold text-zinc-900 leading-none tracking-tight">
+              <h1 className="text-[28px] font-bold text-zinc-900 leading-none tracking-tight">
                 {isLogin ? "Sign in" : "Create account"}
               </h1>
-              <p className="text-[12px] text-zinc-500 mt-2">
+              <p className="text-[13px] text-zinc-500 mt-3">
                 {isLogin ? "New user? " : "Have an account? "}
                 <button
                   type="button"
@@ -269,7 +269,7 @@ export default function LoginPage() {
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Full Name"
                         required={!isLogin}
-                        className="h-11 pl-9 text-sm rounded-xl border-zinc-200 bg-zinc-50 placeholder:text-zinc-400 focus-visible:ring-1 focus-visible:ring-indigo-400 focus-visible:border-indigo-400"
+                        className="h-11 pl-9 text-sm rounded-xl border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 focus-visible:ring-1 focus-visible:ring-indigo-400 focus-visible:border-indigo-400"
                       />
                     </div>
                   </motion.div>
@@ -285,7 +285,7 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Email Address"
                   required
-                  className="h-11 pl-9 text-sm rounded-xl border-zinc-200 bg-zinc-50 placeholder:text-zinc-400 focus-visible:ring-1 focus-visible:ring-indigo-400 focus-visible:border-indigo-400"
+                  className="h-11 pl-9 text-sm rounded-xl border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 focus-visible:ring-1 focus-visible:ring-indigo-400 focus-visible:border-indigo-400"
                 />
               </div>
 
@@ -298,7 +298,7 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
                   required
-                  className="h-11 pl-9 pr-10 text-sm rounded-xl border-zinc-200 bg-zinc-50 placeholder:text-zinc-400 focus-visible:ring-1 focus-visible:ring-indigo-400 focus-visible:border-indigo-400"
+                  className="h-11 pl-9 pr-10 text-sm rounded-xl border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 focus-visible:ring-1 focus-visible:ring-indigo-400 focus-visible:border-indigo-400"
                 />
                 <button
                   type="button"
