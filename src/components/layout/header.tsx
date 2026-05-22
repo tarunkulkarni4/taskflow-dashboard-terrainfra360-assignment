@@ -8,10 +8,12 @@ import { useRouter } from "next/navigation";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useTheme } from "next-themes";
+import { useAuth } from "@/lib/AuthContext";
 
 export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
+  const { user } = useAuth();
 
   const handleLogout = async () => {
     try {
@@ -56,14 +58,22 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
 
         <DropdownMenu>
           <DropdownMenuTrigger className="flex items-center gap-2 outline-none">
-            <Avatar className="h-8 w-8 transition-transform hover:scale-105">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@user" />
-              <AvatarFallback>U</AvatarFallback>
+            <Avatar className="h-8 w-8 transition-transform hover:scale-105 border">
+              <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                {user?.email ? user.email.charAt(0).toUpperCase() : "U"}
+              </AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuGroup>
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium leading-none">My Account</p>
+                  <p className="text-xs leading-none text-muted-foreground">
+                    {user?.email || "user@example.com"}
+                  </p>
+                </div>
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => router.push('/settings')}>Profile</DropdownMenuItem>
               <DropdownMenuItem onClick={() => router.push('/settings')}>Settings</DropdownMenuItem>
