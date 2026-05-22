@@ -10,7 +10,7 @@ A clean, responsive, full-stack personal task management application built with 
 ## 🚀 Links & Demo
 
 - **GitHub Repository:** [taskflow-dashboard-terrainfra360-assignment](https://github.com/tarunkulkarni4/taskflow-dashboard-terrainfra360-assignment)
-- **Deployed URL:** `https://YOUR-APP.vercel.app` *(replace after Vercel deployment)*
+- **Deployed URL:** [https://taskflow-dashboard-terrainfra360-as.vercel.app](https://taskflow-dashboard-terrainfra360-as.vercel.app)
 - **Demo Account:**
   - **Email:** `demo@taskflow.com`
   - **Password:** `Demo@1234`
