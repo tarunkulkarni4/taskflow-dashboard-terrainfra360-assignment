@@ -10,6 +10,7 @@ import {
 import { auth, db } from "@/lib/firebase";
 import { setDoc, doc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
+import { Spinner } from "@/components/ui/spinner";
 import { Input } from "@/components/ui/input";
 import {
   CheckSquare,
@@ -339,7 +340,7 @@ export default function LoginPage() {
                 disabled={loading || ssoLoading !== null}
                 className="w-full h-11 rounded-full bg-zinc-950 hover:bg-zinc-800 text-white text-sm font-bold transition-all active:scale-[0.98] disabled:opacity-50 mt-1"
               >
-                {loading ? <Loader2 className="h-4 w-4 animate-spin mx-auto" /> : (isLogin ? "Login" : "Sign Up")}
+                {loading ? <Spinner className="text-white" /> : (isLogin ? "Login" : "Sign Up")}
               </button>
             </form>
 
@@ -364,7 +365,7 @@ export default function LoginPage() {
                   title="Google"
                   className="w-10 h-10 rounded-full border border-zinc-200 bg-white hover:bg-zinc-50 flex items-center justify-center shadow-sm active:scale-95 transition-all"
                 >
-                  {ssoLoading === "google" ? <Loader2 className="h-4 w-4 animate-spin text-zinc-400" /> : (
+                  {ssoLoading === "google" ? <Spinner className="text-zinc-600" /> : (
                     <svg className="h-[18px] w-[18px]" viewBox="0 0 24 24">
                       <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
                       <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />

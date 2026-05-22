@@ -5,6 +5,8 @@ import { Plus, Trash2, CheckCircle2, Circle, ArrowLeft } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/lib/AuthContext";
@@ -40,6 +42,7 @@ export default function ProjectDetailsPage() {
   const [newDueDate, setNewDueDate] = useState("");
   const [newPriority, setNewPriority] = useState<"Low" | "Medium" | "High">("Medium");
   const [newStatus, setNewStatus] = useState<"Todo" | "In Progress" | "Done">("Todo");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (!user || !projectId) return;
@@ -79,33 +82,30 @@ export default function ProjectDetailsPage() {
     e.preventDefault();
     if (!newTitle.trim() || !user) return;
 
-    // Optimistically close popup
-    const titleToSave = newTitle;
-    const dueDateToSave = newDueDate || new Date().toISOString().split("T")[0];
-    const priorityToSave = newPriority;
-    const statusToSave = newStatus;
-
-    setNewTitle("");
-    setNewDueDate("");
-    setNewPriority("Medium");
-    setNewStatus("Todo");
-    setIsDialogOpen(false);
+    setIsSubmitting(true);
 
     try {
       await addDoc(collection(db, "tasks"), {
-        title: titleToSave,
-        status: statusToSave,
-        dueDate: dueDateToSave,
-        priority: priorityToSave,
+        title: newTitle,
+        status: newStatus,
+        dueDate: newDueDate || new Date().toISOString().split("T")[0],
+        priority: newPriority,
         projectId: projectId,
-        project: projectName,   // Save the project name for display in My Tasks
+        project: projectName,
         userId: user.uid,
         createdAt: serverTimestamp(),
       });
       toast.success("Task added to project!");
+      setNewTitle("");
+      setNewDueDate("");
+      setNewPriority("Medium");
+      setNewStatus("Todo");
+      setIsDialogOpen(false);
     } catch (error) {
       console.error("Error adding task: ", error);
-      toast.error("Failed to add task. Check your Firestore rules.");
+      toast.error("Failed to add task.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -209,8 +209,8 @@ export default function ProjectDetailsPage() {
                   <Input type="date" value={newDueDate} onChange={(e) => setNewDueDate(e.target.value)} />
                 </div>
               </div>
-              <button type="submit" className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground py-2.5 font-medium hover:bg-primary/95 transition-all">
-                Save Task
+              <button disabled={isSubmitting} type="submit" className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground py-2.5 font-medium hover:bg-primary/95 transition-all disabled:opacity-70">
+                {isSubmitting ? <Spinner className="text-primary-foreground" /> : "Save Task"}
               </button>
             </form>
           </DialogContent>

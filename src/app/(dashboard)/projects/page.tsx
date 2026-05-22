@@ -12,6 +12,7 @@ import { collection, query, where, onSnapshot, addDoc, serverTimestamp, deleteDo
 import Link from "next/link";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 
 interface Project {
   id: string;
@@ -25,6 +26,7 @@ export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newName, setNewName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -60,21 +62,22 @@ export default function ProjectsPage() {
     e.preventDefault();
     if (!newName.trim() || !user) return;
 
-    // Optimistically close dialog and clear name
-    const projectName = newName;
-    setNewName("");
-    setIsDialogOpen(false);
+    setIsSubmitting(true);
 
     try {
       await addDoc(collection(db, "projects"), {
-        name: projectName,
+        name: newName,
         userId: user.uid,
         createdAt: serverTimestamp(),
       });
       toast.success("Project created!");
+      setNewName("");
+      setIsDialogOpen(false);
     } catch (error) {
       console.error("Error adding project: ", error);
       toast.error("Failed to add project. Check your Firestore rules.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -150,10 +153,11 @@ export default function ProjectsPage() {
                 <Input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="e.g. Marketing Redesign" required />
               </div>
               <button 
+                disabled={isSubmitting}
                 type="submit" 
-                className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground py-2.5 font-medium hover:bg-primary/95 transition-all"
+                className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground py-2.5 font-medium hover:bg-primary/95 transition-all disabled:opacity-70"
               >
-                Save Project
+                {isSubmitting ? <Spinner className="text-primary-foreground" /> : "Save Project"}
               </button>
             </form>
           </DialogContent>

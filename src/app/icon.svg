@@ -1,4 +1,10 @@
 <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-  <rect width="32" height="32" rx="8" fill="#4f46e5" />
-  <path d="M11 10H21M16 10V22" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- The dark rounded background box -->
+  <rect width="32" height="32" rx="8" fill="#09090b" />
+  
+  <!-- The CheckSquare path inside the box (scaled to fit nicely in the middle) -->
+  <g transform="translate(4, 4) scale(1)">
+    <path d="m9 11 3 3L22 4" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
 </svg>
