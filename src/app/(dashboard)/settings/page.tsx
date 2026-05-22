@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/lib/AuthContext";
 import { User, Bell, Shield, Palette, Check } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,11 +11,20 @@ import { cn } from "@/lib/utils";
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<"profile" | "notifications" | "security" | "appearance">("profile");
   
+  const { user } = useAuth();
+  
   // Profile settings state
-  const [name, setName] = useState("John Doe");
-  const [email, setEmail] = useState("john.doe@example.com");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [role, setRole] = useState("Product Designer");
   const [successMsg, setSuccessMsg] = useState("");
+
+  useEffect(() => {
+    if (user) {
+      setEmail(user.email || "");
+      setName(user.displayName || "My User");
+    }
+  }, [user]);
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
